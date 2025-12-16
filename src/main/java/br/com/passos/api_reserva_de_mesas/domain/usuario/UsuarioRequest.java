@@ -1,15 +1,11 @@
 package br.com.passos.api_reserva_de_mesas.domain.usuario;
 
-import jakarta.validation.constraints.Email;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.Pattern;
-import jakarta.validation.constraints.Size;
+import jakarta.validation.constraints.*;
 
 public record UsuarioRequest(
 
         @NotBlank(message = "Usuário é obrigatório")
         @Size(min = 3, max = 255, message = "Usuário deve ter entre 3 e 150 caracteres")
-        @Pattern(regexp = "^[a-zA-Z0-9._-]+$", message = "Usuário deve conter apenas letras, números, pontos, hífens e underscores")
         String nome,
 
         @NotBlank(message = "Email é obrigatório")
@@ -22,7 +18,7 @@ public record UsuarioRequest(
         @Pattern(regexp = "^[a-zA-Z0-9._-]+$", message = "Senha deve conter apenas letras, números, pontos, hífens e underscores")
         String senha,
 
-        @NotBlank(message = "Status é obrigatório")
+        @NotNull(message = "Status é obrigatório")
         Role role
 ) {
 }
