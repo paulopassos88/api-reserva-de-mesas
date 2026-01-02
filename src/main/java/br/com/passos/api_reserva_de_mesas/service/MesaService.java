@@ -16,6 +16,13 @@ public class MesaService {
 
     @Transactional
     public Mesa cadastrar(Mesa mesa) {
+        validarIdentificador(mesa.getIdentificador());
         return mesaRepository.save(mesa);
+    }
+
+    private void validarIdentificador(String identificador){
+        if(mesaRepository.existsByIdentificador(identificador)){
+            throw new IdentificadorJaCadastradoException("Identificador da mesa cadastrado");
+        }
     }
 }

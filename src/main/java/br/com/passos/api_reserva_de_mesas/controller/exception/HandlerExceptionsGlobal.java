@@ -1,6 +1,7 @@
 package br.com.passos.api_reserva_de_mesas.controller.exception;
 
 import br.com.passos.api_reserva_de_mesas.service.EmailJaCadastradoException;
+import br.com.passos.api_reserva_de_mesas.service.IdentificadorJaCadastradoException;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.context.support.DefaultMessageSourceResolvable;
 import org.springframework.http.HttpStatus;
@@ -46,6 +47,19 @@ public class HandlerExceptionsGlobal {
                 HttpStatus.CONFLICT.value(),
                 "Validação de email",
                 "Email fornecido já esta cadastrado",
+                request.getRequestURI()
+        );
+
+        return ResponseEntity.status(HttpStatus.CONFLICT).body(errorResponse);
+    }
+
+    @ExceptionHandler(IdentificadorJaCadastradoException.class)
+    public ResponseEntity<ErrorResponse> handleIdentificadorJaCadastradoException(IdentificadorJaCadastradoException ex, HttpServletRequest request) {
+        ErrorResponse errorResponse = new ErrorResponse(
+                LocalDateTime.now(),
+                HttpStatus.CONFLICT.value(),
+                "Validação do identificador da mesa",
+                "Identificador fornecido já esta cadastrado",
                 request.getRequestURI()
         );
 

@@ -2,6 +2,7 @@ package br.com.passos.api_reserva_de_mesas.controller;
 
 import br.com.passos.api_reserva_de_mesas.domain.mesa.Mesa;
 import br.com.passos.api_reserva_de_mesas.service.MesaService;
+import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -20,7 +21,7 @@ public class MesaController {
     }
 
     @PostMapping
-    public ResponseEntity<Mesa> cadastrar(@RequestBody Mesa mesa) {
+    public ResponseEntity<Mesa> cadastrar(@Valid @RequestBody Mesa mesa) {
         Mesa mesaSalva = mesaService.cadastrar(mesa);
         return ResponseEntity.status(HttpStatus.CREATED).body(mesaSalva);
     }
