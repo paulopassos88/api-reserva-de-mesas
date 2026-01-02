@@ -1,6 +1,9 @@
 package br.com.passos.api_reserva_de_mesas.controller;
 
 import br.com.passos.api_reserva_de_mesas.domain.mesa.Mesa;
+import br.com.passos.api_reserva_de_mesas.domain.mesa.MesaMapper;
+import br.com.passos.api_reserva_de_mesas.domain.mesa.MesaRequest;
+import br.com.passos.api_reserva_de_mesas.domain.mesa.MesaResponse;
 import br.com.passos.api_reserva_de_mesas.service.MesaService;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
@@ -15,14 +18,18 @@ import org.springframework.web.bind.annotation.RestController;
 public class MesaController {
 
     private final MesaService mesaService;
+    private final MesaMapper mesaMapper;
 
-    public MesaController(MesaService mesaService) {
+    public MesaController(MesaService mesaService, MesaMapper mesaMapper) {
         this.mesaService = mesaService;
+        this.mesaMapper = mesaMapper;
     }
 
     @PostMapping
-    public ResponseEntity<Mesa> cadastrar(@Valid @RequestBody Mesa mesa) {
+    public ResponseEntity<MesaResponse> cadastrar(@Valid @RequestBody MesaRequest mesaRequest) {
+        Mesa mesa = mesaMapper.toModel(mesaRequest);
         Mesa mesaSalva = mesaService.cadastrar(mesa);
-        return ResponseEntity.status(HttpStatus.CREATED).body(mesaSalva);
+        MesaResponse mesaResponse = mesaMapper.toResponseDTO(mesaSalva);
+        return ResponseEntity.status(HttpStatus.CREATED).body(mesaResponse);
     }
 }

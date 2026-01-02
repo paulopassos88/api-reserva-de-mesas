@@ -8,7 +8,7 @@ public record MesaRequest(
         @NotBlank(message = "O identificador da mesa é obrigatório")
         String identificador,
 
-        @NotBlank(message = "A capacidade da mesa é obrigatório")
+        @NotNull(message = "A capacidade da mesa é obrigatório")
         Integer capacidade,
 
         @NotNull(message = "Status é obrigatório")
