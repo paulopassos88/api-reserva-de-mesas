@@ -3,6 +3,7 @@ package br.com.passos.api_reserva_de_mesas.domain.reserva;
 import br.com.passos.api_reserva_de_mesas.domain.mesa.Mesa;
 import br.com.passos.api_reserva_de_mesas.domain.usuario.Usuario;
 import jakarta.persistence.*;
+
 import java.io.Serial;
 import java.io.Serializable;
 import java.time.LocalDateTime;
@@ -29,6 +30,9 @@ public class Reserva implements Serializable {
 
     @Column(nullable = false)
     private LocalDateTime dataReserva;
+
+    @Column(name = "quantidade_pessoas", nullable = false)
+    private Integer quantidadePessoas;
 
     @Enumerated(EnumType.STRING)
     private Status status;
@@ -63,6 +67,14 @@ public class Reserva implements Serializable {
 
     public void setDataReserva(LocalDateTime dataReserva) {
         this.dataReserva = dataReserva;
+    }
+
+    public Integer getQuantidadePessoas() {
+        return quantidadePessoas;
+    }
+
+    public void setQuantidadePessoas(Integer quantidadePessoas) {
+        this.quantidadePessoas = quantidadePessoas;
     }
 
     public Status getStatus() {

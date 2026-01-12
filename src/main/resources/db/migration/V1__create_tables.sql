@@ -13,6 +13,7 @@ CREATE TABLE reserva
     usuario_id   BIGINT,
     mesa_id      BIGINT,
     data_reserva TIMESTAMP WITHOUT TIME ZONE             NOT NULL,
+    quantidade_pessoas INTEGER NOT NULL,
     status       VARCHAR(255),
     CONSTRAINT pk_reserva PRIMARY KEY (id)
 );
