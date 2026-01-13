@@ -2,6 +2,7 @@ package br.com.passos.api_reserva_de_mesas.service;
 
 import br.com.passos.api_reserva_de_mesas.domain.mesa.Mesa;
 import br.com.passos.api_reserva_de_mesas.domain.mesa.MesaRepository;
+import br.com.passos.api_reserva_de_mesas.domain.mesa.Status;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -20,9 +21,20 @@ public class MesaService {
         return mesaRepository.save(mesa);
     }
 
-    private void validarIdentificador(String identificador){
-        if(mesaRepository.existsByIdentificador(identificador)){
+    @Transactional
+    public void atualizarStatusMesa(long id) {
+        mesaRepository.atualizarStatus(id, Status.RESERVADO);
+    }
+
+    private void validarIdentificador(String identificador) {
+        if (mesaRepository.existsByIdentificador(identificador)) {
             throw new IdentificadorJaCadastradoException("Identificador da mesa cadastrado");
+        }
+    }
+
+    public void mesaExiste(long id) {
+        if (!mesaRepository.existsMesaBy(id)) {
+            throw new RuntimeException("Mesa não existe");
         }
     }
 }

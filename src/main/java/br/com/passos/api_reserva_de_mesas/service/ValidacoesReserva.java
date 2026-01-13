@@ -11,4 +11,6 @@ public interface ValidacoesReserva {
 
     void horarioDisponivel(LocalDateTime data_horario);
 
+    void capacidadeMesa(int quantidadePessoas, long id);
+
 }

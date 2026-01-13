@@ -12,16 +12,18 @@ public class ValidacoesReservaImpl implements ValidacoesReserva {
 
     private final MesaRepository mesaRepository;
     private final ReservaRepository reservaRepository;
+    private final MesaService mesaService;
 
-    public ValidacoesReservaImpl(MesaRepository mesaRepository, ReservaRepository reservaRepository) {
+    public ValidacoesReservaImpl(MesaRepository mesaRepository, ReservaRepository reservaRepository, MesaService mesaService) {
         this.mesaRepository = mesaRepository;
         this.reservaRepository = reservaRepository;
+        this.mesaService = mesaService;
     }
 
     @Override
     public void mesaDisponivel(long mesaId) {
-        Status status = mesaRepository.statusMesa(mesaId)
-                .orElseThrow(() -> new RuntimeException("Mesa não encontrada"));
+        mesaService.mesaExiste(mesaId);
+        Status status = mesaRepository.statusMesa(mesaId);
 
         if (status == Status.RESERVADO || status == Status.INATIVA) {
             throw new RuntimeException("Mesa indisponível");
@@ -34,4 +36,15 @@ public class ValidacoesReservaImpl implements ValidacoesReserva {
             throw new RuntimeException("A data e hora indisponível no momento");
         }
     }
+
+    @Override
+    public void capacidadeMesa(int quantidadePessoas, long id) {
+        int capacidade = mesaRepository.capacidadeMesa(id);
+
+        if (capacidade < quantidadePessoas) {
+            throw new RuntimeException("A Quantidade pessoas maior do que a capacidade da mesa");
+        }
+    }
+
+
 }

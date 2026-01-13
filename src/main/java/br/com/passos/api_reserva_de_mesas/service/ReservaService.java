@@ -10,16 +10,21 @@ public class ReservaService {
 
     private final ValidacoesReserva validacoesReserva;
     private final ReservaRepository reservaRepository;
+    private final MesaService mesaService;
 
-    public ReservaService(ValidacoesReserva validacoesReserva, ReservaRepository reservaRepository) {
+    public ReservaService(ValidacoesReserva validacoesReserva, ReservaRepository reservaRepository, MesaService mesaService) {
         this.validacoesReserva = validacoesReserva;
         this.reservaRepository = reservaRepository;
+        this.mesaService = mesaService;
     }
 
     @Transactional
     public Reserva cadastrar(Reserva reserva) {
         validacoesReserva.mesaDisponivel(reserva.getMesa().getId());
         validacoesReserva.horarioDisponivel(reserva.getDataReserva());
+        validacoesReserva.capacidadeMesa(reserva.getQuantidadePessoas(), reserva.getMesa().getId());
+
+        mesaService.atualizarStatusMesa(reserva.getMesa().getId());
 
         return reservaRepository.save(reserva);
     }
