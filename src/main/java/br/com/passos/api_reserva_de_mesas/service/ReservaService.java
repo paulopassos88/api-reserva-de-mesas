@@ -2,27 +2,26 @@ package br.com.passos.api_reserva_de_mesas.service;
 
 import br.com.passos.api_reserva_de_mesas.domain.reserva.Reserva;
 import br.com.passos.api_reserva_de_mesas.domain.reserva.ReservaRepository;
+import br.com.passos.api_reserva_de_mesas.service.regrasNegocios.RegrasNegocioReserva;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class ReservaService {
 
-    private final ValidacoesReserva validacoesReserva;
+    private final RegrasNegocioReserva regrasNegocioReserva;
     private final ReservaRepository reservaRepository;
     private final MesaService mesaService;
 
-    public ReservaService(ValidacoesReserva validacoesReserva, ReservaRepository reservaRepository, MesaService mesaService) {
-        this.validacoesReserva = validacoesReserva;
+    public ReservaService(RegrasNegocioReserva regrasNegocioReserva, ReservaRepository reservaRepository, MesaService mesaService) {
+        this.regrasNegocioReserva = regrasNegocioReserva;
         this.reservaRepository = reservaRepository;
         this.mesaService = mesaService;
     }
 
     @Transactional
     public Reserva cadastrar(Reserva reserva) {
-        validacoesReserva.mesaDisponivel(reserva.getMesa().getId());
-        validacoesReserva.horarioDisponivel(reserva.getDataReserva());
-        validacoesReserva.capacidadeMesa(reserva.getQuantidadePessoas(), reserva.getMesa().getId());
+        regrasNegocioReserva.regrasValidacaoReserva(reserva);
 
         mesaService.atualizarStatusMesa(reserva.getMesa().getId());
 

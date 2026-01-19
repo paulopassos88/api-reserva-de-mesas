@@ -12,7 +12,8 @@ public interface ReservaRepository extends JpaRepository<Reserva, Long> {
                 SELECT COUNT(r) > 0
                 FROM Reserva r
                 WHERE r.dataReserva = :dataReserva
+                and r.mesa.id = :idMesa
             """)
-    boolean existeReservaNaData(@Param("dataReserva") LocalDateTime dataReserva);
+    boolean existeReservaNaData(@Param("dataReserva") LocalDateTime dataReserva, @Param("idMesa") long idMesa);
 
 }
