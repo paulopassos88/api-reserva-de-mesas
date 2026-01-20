@@ -4,7 +4,6 @@ import br.com.passos.api_reserva_de_mesas.domain.mesa.MesaRepository;
 import br.com.passos.api_reserva_de_mesas.domain.mesa.Status;
 import br.com.passos.api_reserva_de_mesas.domain.reserva.Reserva;
 import br.com.passos.api_reserva_de_mesas.domain.reserva.ReservaRepository;
-import br.com.passos.api_reserva_de_mesas.service.MesaService;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDateTime;
@@ -14,42 +13,44 @@ public class RegrasNegocioReservaImpl implements RegrasNegocioReserva {
 
     private final MesaRepository mesaRepository;
     private final ReservaRepository reservaRepository;
-    private final MesaService mesaService;
 
-    public RegrasNegocioReservaImpl(MesaRepository mesaRepository, ReservaRepository reservaRepository, MesaService mesaService) {
+    public RegrasNegocioReservaImpl(MesaRepository mesaRepository, ReservaRepository reservaRepository) {
         this.mesaRepository = mesaRepository;
         this.reservaRepository = reservaRepository;
-        this.mesaService = mesaService;
     }
 
     @Override
     public void regrasValidacaoReserva(Reserva reserva) {
-        mesaDisponivel(reserva.getMesa().getId());
-        horarioDisponivel(reserva.getDataReserva(), reserva.getMesa().getId());
-        capacidadeMesa(reserva.getQuantidadePessoas(), reserva.getMesa().getId());
+        Long mesaId = reserva.getMesa().getId();
 
+        validarExistenciaEDisponibilidade(mesaId);
+        validarHorarioDisponivel(reserva.getDataReserva(), mesaId);
+        validarCapacidade(reserva.getQuantidadePessoas(), mesaId);
     }
 
-    private void mesaDisponivel(long mesaId) {
-        mesaService.mesaExiste(mesaId);
+    private void validarExistenciaEDisponibilidade(long mesaId) {
+        if (!mesaRepository.existsMesaBy(mesaId)) {
+            throw new RuntimeException("Mesa não encontrada");
+        }
+
         Status status = mesaRepository.statusMesa(mesaId);
 
         if (status == Status.RESERVADO || status == Status.INATIVA) {
-            throw new RuntimeException("Mesa indisponível");
+            throw new RuntimeException("A mesa selecionada já está reservada ou encontra-se inativa.");
         }
     }
 
-    private void horarioDisponivel(LocalDateTime dataHorario, long idMesa) {
+    private void validarHorarioDisponivel(LocalDateTime dataHorario, long idMesa) {
         if (reservaRepository.existeReservaNaData(dataHorario, idMesa)) {
-            throw new RuntimeException("A data e hora indisponível no momento");
+            throw new RuntimeException("Já existe uma reserva para esta mesa no horário selecionado.");
         }
     }
 
-    private void capacidadeMesa(int quantidadePessoas, long id) {
+    private void validarCapacidade(int quantidadePessoas, long id) {
         int capacidade = mesaRepository.capacidadeMesa(id);
 
-        if (capacidade < quantidadePessoas) {
-            throw new RuntimeException("A Quantidade pessoas maior do que a capacidade da mesa");
+        if (quantidadePessoas > capacidade) {
+            throw new RuntimeException("A quantidade de pessoas excede a capacidade máxima da mesa (" + capacidade + ").");
         }
     }
 

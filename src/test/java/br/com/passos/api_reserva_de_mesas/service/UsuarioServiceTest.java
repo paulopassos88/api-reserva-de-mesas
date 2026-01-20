@@ -3,12 +3,10 @@ package br.com.passos.api_reserva_de_mesas.service;
 import br.com.passos.api_reserva_de_mesas.domain.usuario.Role;
 import br.com.passos.api_reserva_de_mesas.domain.usuario.Usuario;
 import br.com.passos.api_reserva_de_mesas.domain.usuario.UsuarioRepository;
-import org.junit.jupiter.api.Assertions;
+import br.com.passos.api_reserva_de_mesas.service.exception.EmailJaCadastradoException;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.ArgumentCaptor;
-import org.mockito.Captor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
@@ -28,7 +26,7 @@ class UsuarioServiceTest {
 
     @Test
     @DisplayName("Deve criar um usuário com sucesso")
-    void deveCriarUsuarioComSucesso(){
+    void deveCriarUsuarioComSucesso() {
         //Arrange
         var usuario = criarUsuarioDefault();
         when(usuarioRepository.existsByEmail("paulo@paulo.com")).thenReturn(false);
@@ -47,7 +45,7 @@ class UsuarioServiceTest {
 
     @Test
     @DisplayName("Deve lançar exceção quando email já está cadastrado")
-    void deveLancarExcecaoQuandoEmailJaCadastrado(){
+    void deveLancarExcecaoQuandoEmailJaCadastrado() {
         //Arrange
         var usuario = criarUsuarioDefault();
         when(usuarioRepository.existsByEmail("paulo@paulo.com")).thenReturn(true);

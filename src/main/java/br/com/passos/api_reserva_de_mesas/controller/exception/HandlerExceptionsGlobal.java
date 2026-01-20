@@ -1,7 +1,7 @@
 package br.com.passos.api_reserva_de_mesas.controller.exception;
 
-import br.com.passos.api_reserva_de_mesas.service.EmailJaCadastradoException;
-import br.com.passos.api_reserva_de_mesas.service.IdentificadorJaCadastradoException;
+import br.com.passos.api_reserva_de_mesas.service.exception.EmailJaCadastradoException;
+import br.com.passos.api_reserva_de_mesas.service.exception.IdentificadorJaCadastradoException;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.context.support.DefaultMessageSourceResolvable;
 import org.springframework.http.HttpStatus;
@@ -10,6 +10,7 @@ import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+
 import java.time.LocalDateTime;
 import java.util.Map;
 import java.util.stream.Collectors;

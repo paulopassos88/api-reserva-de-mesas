@@ -3,6 +3,7 @@ package br.com.passos.api_reserva_de_mesas.service;
 import br.com.passos.api_reserva_de_mesas.domain.mesa.Mesa;
 import br.com.passos.api_reserva_de_mesas.domain.mesa.MesaRepository;
 import br.com.passos.api_reserva_de_mesas.domain.mesa.Status;
+import br.com.passos.api_reserva_de_mesas.service.exception.IdentificadorJaCadastradoException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -32,9 +33,4 @@ public class MesaService {
         }
     }
 
-    public void mesaExiste(long id) {
-        if (!mesaRepository.existsMesaBy(id)) {
-            throw new RuntimeException("Mesa não existe");
-        }
-    }
 }
