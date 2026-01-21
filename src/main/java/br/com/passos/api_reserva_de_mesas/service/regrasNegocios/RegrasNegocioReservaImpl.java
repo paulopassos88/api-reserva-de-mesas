@@ -4,6 +4,10 @@ import br.com.passos.api_reserva_de_mesas.domain.mesa.MesaRepository;
 import br.com.passos.api_reserva_de_mesas.domain.mesa.Status;
 import br.com.passos.api_reserva_de_mesas.domain.reserva.Reserva;
 import br.com.passos.api_reserva_de_mesas.domain.reserva.ReservaRepository;
+import br.com.passos.api_reserva_de_mesas.service.exception.CapacidadeExcedeException;
+import br.com.passos.api_reserva_de_mesas.service.exception.DataHorarioIndisponivelException;
+import br.com.passos.api_reserva_de_mesas.service.exception.MesaIndisponivelException;
+import br.com.passos.api_reserva_de_mesas.service.exception.MesaNaoCadastradaException;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDateTime;
@@ -30,19 +34,19 @@ public class RegrasNegocioReservaImpl implements RegrasNegocioReserva {
 
     private void validarExistenciaEDisponibilidade(long mesaId) {
         if (!mesaRepository.existsMesaBy(mesaId)) {
-            throw new RuntimeException("Mesa não encontrada");
+            throw new MesaNaoCadastradaException("Mesa não encontrada");
         }
 
         Status status = mesaRepository.statusMesa(mesaId);
 
         if (status == Status.RESERVADO || status == Status.INATIVA) {
-            throw new RuntimeException("A mesa selecionada já está reservada ou encontra-se inativa.");
+            throw new MesaIndisponivelException("A mesa selecionada já está reservada ou encontra-se inativa.");
         }
     }
 
     private void validarHorarioDisponivel(LocalDateTime dataHorario, long idMesa) {
         if (reservaRepository.existeReservaNaData(dataHorario, idMesa)) {
-            throw new RuntimeException("Já existe uma reserva para esta mesa no horário selecionado.");
+            throw new DataHorarioIndisponivelException("Já existe uma reserva para esta mesa no horário selecionado.");
         }
     }
 
@@ -50,7 +54,7 @@ public class RegrasNegocioReservaImpl implements RegrasNegocioReserva {
         int capacidade = mesaRepository.capacidadeMesa(id);
 
         if (quantidadePessoas > capacidade) {
-            throw new RuntimeException("A quantidade de pessoas excede a capacidade máxima da mesa (" + capacidade + ").");
+            throw new CapacidadeExcedeException("A quantidade de pessoas excede a capacidade máxima da mesa (" + capacidade + ").");
         }
     }
 
