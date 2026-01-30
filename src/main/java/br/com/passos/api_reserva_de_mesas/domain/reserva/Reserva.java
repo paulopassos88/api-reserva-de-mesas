@@ -37,6 +37,9 @@ public class Reserva implements Serializable {
     @Enumerated(EnumType.STRING)
     private Status status;
 
+    @Column(nullable = false)
+    private Boolean ativa = true;
+
     public Long getId() {
         return id;
     }
@@ -83,6 +86,14 @@ public class Reserva implements Serializable {
 
     public void setStatus(Status status) {
         this.status = status;
+    }
+
+    public Boolean getAtiva() {
+        return ativa;
+    }
+
+    public void setAtiva(Boolean ativa) {
+        this.ativa = ativa;
     }
 
     @Override

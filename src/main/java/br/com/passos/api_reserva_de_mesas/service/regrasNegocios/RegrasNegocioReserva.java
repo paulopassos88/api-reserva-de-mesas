@@ -8,4 +8,6 @@ public interface RegrasNegocioReserva {
 
     void regrasValidacaoReserva(Reserva reserva);
 
+    void validarCancelamento(Reserva reserva);
+
 }

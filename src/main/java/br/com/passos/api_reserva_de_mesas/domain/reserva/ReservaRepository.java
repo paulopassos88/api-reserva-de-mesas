@@ -5,6 +5,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import java.time.LocalDateTime;
+import java.util.Optional;
 
 public interface ReservaRepository extends JpaRepository<Reserva, Long> {
 
@@ -16,4 +17,12 @@ public interface ReservaRepository extends JpaRepository<Reserva, Long> {
             """)
     boolean existeReservaNaData(@Param("dataReserva") LocalDateTime dataReserva, @Param("idMesa") long idMesa);
 
+    @Query("""
+            select r
+            from Reserva r
+            where r.usuario.id = :usuarioId
+                  and r.dataReserva = :dataReserva
+                  and r.ativa = true
+            """)
+    Optional<Reserva> buscarReservarAtiva(@Param("usuarioId") Long usuarioId, @Param("dataReserva") LocalDateTime dataReserva);
 }

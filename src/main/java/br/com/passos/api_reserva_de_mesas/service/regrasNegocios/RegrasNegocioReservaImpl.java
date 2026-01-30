@@ -4,12 +4,10 @@ import br.com.passos.api_reserva_de_mesas.domain.mesa.MesaRepository;
 import br.com.passos.api_reserva_de_mesas.domain.mesa.Status;
 import br.com.passos.api_reserva_de_mesas.domain.reserva.Reserva;
 import br.com.passos.api_reserva_de_mesas.domain.reserva.ReservaRepository;
-import br.com.passos.api_reserva_de_mesas.service.exception.CapacidadeExcedeException;
-import br.com.passos.api_reserva_de_mesas.service.exception.DataHorarioIndisponivelException;
-import br.com.passos.api_reserva_de_mesas.service.exception.MesaIndisponivelException;
-import br.com.passos.api_reserva_de_mesas.service.exception.MesaNaoCadastradaException;
+import br.com.passos.api_reserva_de_mesas.service.exception.*;
 import org.springframework.stereotype.Component;
 
+import java.time.Duration;
 import java.time.LocalDateTime;
 
 @Component
@@ -31,6 +29,27 @@ public class RegrasNegocioReservaImpl implements RegrasNegocioReserva {
         validarHorarioDisponivel(reserva.getDataReserva(), mesaId);
         validarCapacidade(reserva.getQuantidadePessoas(), mesaId);
     }
+
+    @Override
+    public void validarCancelamento(Reserva reserva) {
+        LocalDateTime agora = LocalDateTime.now();
+        LocalDateTime dataReserva = reserva.getDataReserva();
+
+        if (dataReserva.isBefore(agora)) {
+            throw new CancelamentoNaoPermitidoException(
+                    "Não é possível cancelar uma reserva que já ocorreu."
+            );
+        }
+
+        long horasAteReserva = Duration.between(agora, dataReserva).toHours();
+
+        if (horasAteReserva < 2) {
+            throw new CancelamentoNaoPermitidoException(
+                    "Não é possível cancelar a reserva com menos de 2 horas de antecedência."
+            );
+        }
+    }
+
 
     private void validarExistenciaEDisponibilidade(long mesaId) {
         if (!mesaRepository.existsMesaBy(mesaId)) {

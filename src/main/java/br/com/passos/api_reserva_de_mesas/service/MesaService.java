@@ -23,8 +23,8 @@ public class MesaService {
     }
 
     @Transactional
-    public void atualizarStatusMesa(long id) {
-        mesaRepository.atualizarStatus(id, Status.RESERVADO);
+    public void atualizarStatusMesa(long id, Status status) {
+        mesaRepository.atualizarStatus(id, status);
     }
 
     private void validarIdentificador(String identificador) {
