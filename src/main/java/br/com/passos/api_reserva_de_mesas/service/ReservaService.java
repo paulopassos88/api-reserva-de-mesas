@@ -7,6 +7,10 @@ import br.com.passos.api_reserva_de_mesas.service.regrasNegocios.RegrasNegocioRe
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Comparator;
+import java.util.List;
+import java.util.stream.Collectors;
+
 import static br.com.passos.api_reserva_de_mesas.domain.mesa.Status.DISPONIVEL;
 import static br.com.passos.api_reserva_de_mesas.domain.mesa.Status.RESERVADO;
 
@@ -30,6 +34,14 @@ public class ReservaService {
         mesaService.atualizarStatusMesa(reserva.getMesa().getId(), RESERVADO);
 
         return reservaRepository.save(reserva);
+    }
+
+    public List<Reserva> listarReservas() {
+        List<Reserva> reservas = reservaRepository.findAll();
+        return reservas
+                .stream()
+                .sorted(Comparator.comparing(Reserva::getDataReserva))
+                .collect(Collectors.toList());
     }
 
     @Transactional

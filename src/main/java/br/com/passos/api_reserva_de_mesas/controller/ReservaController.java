@@ -8,10 +8,9 @@ import br.com.passos.api_reserva_de_mesas.service.ReservaService;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/reserva")
@@ -31,5 +30,12 @@ public class ReservaController {
         Reserva novaReserva = reservaService.cadastrar(reserva);
         ReservaResponse reservaResponse = reservaMapper.toResponseDTO(novaReserva);
         return ResponseEntity.status(HttpStatus.CREATED).body(reservaResponse);
+    }
+
+    @GetMapping
+    public ResponseEntity<List<ReservaResponse>> listar(){
+        List<Reserva> reservas = reservaService.listarReservas();
+        List<ReservaResponse> reservaResponses = reservas.stream().map(reservaMapper::toResponseDTO).toList();
+        return ResponseEntity.status(HttpStatus.OK).body(reservaResponses);
     }
 }
