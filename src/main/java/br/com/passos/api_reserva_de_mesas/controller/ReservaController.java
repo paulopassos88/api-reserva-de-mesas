@@ -6,6 +6,7 @@ import br.com.passos.api_reserva_de_mesas.domain.reserva.ReservaRequest;
 import br.com.passos.api_reserva_de_mesas.domain.reserva.ReservaResponse;
 import br.com.passos.api_reserva_de_mesas.service.ReservaService;
 import jakarta.validation.Valid;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -33,9 +34,10 @@ public class ReservaController {
     }
 
     @GetMapping
-    public ResponseEntity<List<ReservaResponse>> listar(){
-        List<Reserva> reservas = reservaService.listarReservas();
-        List<ReservaResponse> reservaResponses = reservas.stream().map(reservaMapper::toResponseDTO).toList();
+    public ResponseEntity<Page<ReservaResponse>> listar(@RequestParam(defaultValue = "0") int pagina,
+                                                        @RequestParam(defaultValue = "5") int tamanho){
+        Page<Reserva> reservas = reservaService.listarReservas(pagina, tamanho);
+        Page<ReservaResponse> reservaResponses = reservas.map(reservaMapper::toResponseDTO);
         return ResponseEntity.status(HttpStatus.OK).body(reservaResponses);
     }
 }

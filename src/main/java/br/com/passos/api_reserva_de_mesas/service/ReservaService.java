@@ -4,6 +4,10 @@ import br.com.passos.api_reserva_de_mesas.domain.reserva.Reserva;
 import br.com.passos.api_reserva_de_mesas.domain.reserva.ReservaRepository;
 import br.com.passos.api_reserva_de_mesas.service.exception.CancelamentoNaoPermitidoException;
 import br.com.passos.api_reserva_de_mesas.service.regrasNegocios.RegrasNegocioReserva;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -36,12 +40,9 @@ public class ReservaService {
         return reservaRepository.save(reserva);
     }
 
-    public List<Reserva> listarReservas() {
-        List<Reserva> reservas = reservaRepository.findAll();
-        return reservas
-                .stream()
-                .sorted(Comparator.comparing(Reserva::getDataReserva))
-                .collect(Collectors.toList());
+    public Page<Reserva> listarReservas(int pagina, int tamanho) {
+        Pageable pageable = PageRequest.of(pagina, tamanho, Sort.by("dataReserva").descending());
+        return  reservaRepository.findAll(pageable);
     }
 
     @Transactional
@@ -67,3 +68,14 @@ public class ReservaService {
     }
 
 }
+
+    /*
+
+    public List<Reserva> listarReservas() {
+        List<Reserva> reservas = reservaRepository.findAll();
+        return reservas
+                .stream()
+                .sorted(Comparator.comparing(Reserva::getDataReserva, Comparator.nullsLast(Comparator.naturalOrder())).reversed())
+                .collect(Collectors.toList());
+    }
+     */
