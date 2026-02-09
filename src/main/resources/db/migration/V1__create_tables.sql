@@ -15,6 +15,7 @@ CREATE TABLE reserva
     data_reserva TIMESTAMP WITHOUT TIME ZONE             NOT NULL,
     quantidade_pessoas INTEGER NOT NULL,
     status       VARCHAR(255),
+    ativa BOOLEAN NOT NULL DEFAULT TRUE,
     CONSTRAINT pk_reserva PRIMARY KEY (id)
 );
 

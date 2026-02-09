@@ -7,10 +7,12 @@ import br.com.passos.api_reserva_de_mesas.domain.reserva.ReservaResponse;
 import br.com.passos.api_reserva_de_mesas.service.ReservaService;
 import jakarta.validation.Valid;
 import org.springframework.data.domain.Page;
+import org.springframework.data.repository.query.Param;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @RestController
@@ -40,4 +42,11 @@ public class ReservaController {
         Page<ReservaResponse> reservaResponses = reservas.map(reservaMapper::toResponseDTO);
         return ResponseEntity.status(HttpStatus.OK).body(reservaResponses);
     }
+
+    @GetMapping("/cancelar")
+    public ResponseEntity<Void> cancelarReserva(@Param("idUsuario") Long idUsuario, @Param("dataReserva") LocalDateTime dataReserva){
+        reservaService.cancelarReserva(idUsuario, dataReserva);
+        return ResponseEntity.status(HttpStatus.OK).build();
+    }
+
 }

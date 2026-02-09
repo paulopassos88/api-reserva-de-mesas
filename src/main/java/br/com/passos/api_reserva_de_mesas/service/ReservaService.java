@@ -11,6 +11,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -46,12 +47,12 @@ public class ReservaService {
     }
 
     @Transactional
-    public Reserva cancelarReserva(Reserva reserva) {
+    public void cancelarReserva(Long idUsuario, LocalDateTime dataReserva) {
 
         Reserva reservaExistente = reservaRepository
-                .buscarReservarAtiva(
-                        reserva.getUsuario().getId(),
-                        reserva.getDataReserva()
+                .buscarReservaAtiva(
+                        idUsuario,
+                        dataReserva
                 )
                 .orElseThrow(() -> new CancelamentoNaoPermitidoException("Reserva não encontrada"));
 
@@ -63,8 +64,6 @@ public class ReservaService {
                 reservaExistente.getMesa().getId(),
                 DISPONIVEL
         );
-
-        return reservaExistente;
     }
 
 }
