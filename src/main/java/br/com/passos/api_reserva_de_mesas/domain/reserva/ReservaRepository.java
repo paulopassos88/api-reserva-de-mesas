@@ -16,19 +16,20 @@ public interface ReservaRepository extends JpaRepository<Reserva, Long> {
                 FROM Reserva r
                 WHERE r.dataReserva = :dataReserva
                 and r.mesa.id = :idMesa
+                and r.ativa = true
             """)
     boolean existeReservaNaData(@Param("dataReserva") LocalDateTime dataReserva, @Param("idMesa") long idMesa);
 
     @Query("""
-    select r
-    from Reserva r
-    where r.usuario.id = :usuarioId
-          and CAST(r.dataReserva AS date) = CAST(:dataReserva AS date)
-          and r.ativa = true
-    """)
-    Optional<Reserva> buscarReservaAtiva(
-            @Param("usuarioId") Long usuarioId,
-            @Param("dataReserva") LocalDateTime dataReserva
+        select r
+        from Reserva r
+        where r.id = :idReserva
+              and r.usuario.id = :usuarioId
+              and r.ativa = true
+        """)
+    Optional<Reserva> buscarReservaPorIdEUsuario(
+            @Param("idReserva") Long idReserva,
+            @Param("usuarioId") Long usuarioId
     );
 
     @Override

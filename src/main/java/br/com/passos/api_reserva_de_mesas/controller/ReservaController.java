@@ -1,9 +1,6 @@
 package br.com.passos.api_reserva_de_mesas.controller;
 
-import br.com.passos.api_reserva_de_mesas.domain.reserva.Reserva;
-import br.com.passos.api_reserva_de_mesas.domain.reserva.ReservaMapper;
-import br.com.passos.api_reserva_de_mesas.domain.reserva.ReservaRequest;
-import br.com.passos.api_reserva_de_mesas.domain.reserva.ReservaResponse;
+import br.com.passos.api_reserva_de_mesas.domain.reserva.*;
 import br.com.passos.api_reserva_de_mesas.service.ReservaService;
 import jakarta.validation.Valid;
 import org.springframework.data.domain.Page;
@@ -43,10 +40,14 @@ public class ReservaController {
         return ResponseEntity.status(HttpStatus.OK).body(reservaResponses);
     }
 
-    @GetMapping("/cancelar")
-    public ResponseEntity<Void> cancelarReserva(@Param("idUsuario") Long idUsuario, @Param("dataReserva") LocalDateTime dataReserva){
-        reservaService.cancelarReserva(idUsuario, dataReserva);
-        return ResponseEntity.status(HttpStatus.OK).build();
+    @PostMapping("/{idUsuario}/reservas/{idReserva}/cancelar")
+    public ResponseEntity<Void> cancelarReserva(
+            @PathVariable Long idUsuario,
+            @PathVariable Long idReserva,
+            @RequestBody CancelamentoRequest request
+    ) {
+        reservaService.cancelarReserva(idUsuario, idReserva, request.motivoCancelamento());
+        return ResponseEntity.noContent().build();
     }
 
 }

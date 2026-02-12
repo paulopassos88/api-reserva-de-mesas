@@ -1,5 +1,7 @@
 package br.com.passos.api_reserva_de_mesas.service;
 
+import br.com.passos.api_reserva_de_mesas.domain.mesa.Status;
+import br.com.passos.api_reserva_de_mesas.domain.reserva.CancelamentoRequest;
 import br.com.passos.api_reserva_de_mesas.domain.reserva.Reserva;
 import br.com.passos.api_reserva_de_mesas.domain.reserva.ReservaRepository;
 import br.com.passos.api_reserva_de_mesas.service.exception.CancelamentoNaoPermitidoException;
@@ -47,23 +49,17 @@ public class ReservaService {
     }
 
     @Transactional
-    public void cancelarReserva(Long idUsuario, LocalDateTime dataReserva) {
+    public void cancelarReserva(Long idUsuario, Long idReserva, String motivoCancelamento) {
+        Reserva reserva = reservaRepository
+                .buscarReservaPorIdEUsuario(idReserva, idUsuario)
+                .orElseThrow(() -> new CancelamentoNaoPermitidoException(
+                        "Reserva não encontrada ou não pertence ao usuário."));
 
-        Reserva reservaExistente = reservaRepository
-                .buscarReservaAtiva(
-                        idUsuario,
-                        dataReserva
-                )
-                .orElseThrow(() -> new CancelamentoNaoPermitidoException("Reserva não encontrada"));
+        regrasNegocioReserva.validarCancelamento(reserva);
 
-        regrasNegocioReserva.validarCancelamento(reservaExistente);
+        reserva.cancelar(motivoCancelamento);
 
-        reservaExistente.setAtiva(false);
-
-        mesaService.atualizarStatusMesa(
-                reservaExistente.getMesa().getId(),
-                DISPONIVEL
-        );
+        mesaService.atualizarStatusMesa(reserva.getMesa().getId(), Status.DISPONIVEL);
     }
 
 }

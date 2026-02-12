@@ -16,6 +16,8 @@ CREATE TABLE reserva
     quantidade_pessoas INTEGER NOT NULL,
     status       VARCHAR(255),
     ativa BOOLEAN NOT NULL DEFAULT TRUE,
+    motivo_cancelamento VARCHAR(255),
+    data_cancelamento TIMESTAMP WITHOUT TIME ZONE,
     CONSTRAINT pk_reserva PRIMARY KEY (id)
 );
 

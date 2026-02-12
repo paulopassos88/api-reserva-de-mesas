@@ -2,6 +2,7 @@ package br.com.passos.api_reserva_de_mesas.domain.reserva;
 
 import br.com.passos.api_reserva_de_mesas.domain.mesa.Mesa;
 import br.com.passos.api_reserva_de_mesas.domain.usuario.Usuario;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.persistence.*;
 
 import java.io.Serial;
@@ -28,6 +29,7 @@ public class Reserva implements Serializable {
     @JoinColumn(name = "mesa_id", referencedColumnName = "id")
     private Mesa mesa;
 
+    @JsonFormat(pattern = "dd/MM/yyyy HH:mm", timezone = "America/Sao_Paulo")
     @Column(nullable = false)
     private LocalDateTime dataReserva;
 
@@ -39,6 +41,18 @@ public class Reserva implements Serializable {
 
     @Column(nullable = false)
     private Boolean ativa = true;
+
+    @Column(name = "motivo_cancelamento")
+    private String motivoCancelamento;
+
+    @Column(name = "data_cancelamento")
+    private LocalDateTime dataCancelamento;
+
+    public void cancelar(String motivo) {
+        this.ativa = false;
+        this.motivoCancelamento = motivo;
+        this.dataCancelamento = LocalDateTime.now();
+    }
 
     public Long getId() {
         return id;
@@ -94,6 +108,22 @@ public class Reserva implements Serializable {
 
     public void setAtiva(Boolean ativa) {
         this.ativa = ativa;
+    }
+
+    public String getMotivoCancelamento() {
+        return motivoCancelamento;
+    }
+
+    public void setMotivoCancelamento(String motivoCancelamento) {
+        this.motivoCancelamento = motivoCancelamento;
+    }
+
+    public LocalDateTime getDataCancelamento() {
+        return dataCancelamento;
+    }
+
+    public void setDataCancelamento(LocalDateTime dataCancelamento) {
+        this.dataCancelamento = dataCancelamento;
     }
 
     @Override

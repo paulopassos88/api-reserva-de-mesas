@@ -50,7 +50,6 @@ public class RegrasNegocioReservaImpl implements RegrasNegocioReserva {
         }
     }
 
-
     private void validarExistenciaEDisponibilidade(long mesaId) {
         if (!mesaRepository.existsMesaBy(mesaId)) {
             throw new MesaNaoCadastradaException("Mesa não encontrada");
