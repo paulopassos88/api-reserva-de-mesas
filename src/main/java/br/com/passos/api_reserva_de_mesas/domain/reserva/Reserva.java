@@ -52,6 +52,7 @@ public class Reserva implements Serializable {
         this.ativa = false;
         this.motivoCancelamento = motivo;
         this.dataCancelamento = LocalDateTime.now();
+        this.status = Status.CANCELADA;
     }
 
     public Long getId() {
